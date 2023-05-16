@@ -14,6 +14,7 @@ const Ratings = () => {
 	
 	const peopleDidRatingRegistrationIds = ratings.map(r => r.registration)
 	console.log({peopleDidRatingRegistrationIds})
+	console.log("Eszter értékelések", ratings.filter(r => r.registration==="132850349"))
 	const peopleDidRating = regs.filter(r => peopleDidRatingRegistrationIds.includes(r.id))
 	console.log({regs})
 	console.log({peopleDidRating})

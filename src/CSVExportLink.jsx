@@ -53,3 +53,24 @@ const getCsvReportData = (registrations, fileName) => {
 	return csvReport
 }
 
+
+
+export const AttendancesCSVExportLink = (attendances, fileName, buttonTitle) => {
+	const attendanciesForExport = attendances?.map(attendance => {
+		const {id, registration, attendances} = attendance
+		return {id, registrationId: registration.id, name: registration.name, attendances}
+	})
+	const dataForExport = getRegistrationsForExport(attendanciesForExport)
+	const headers = [
+		{ label: "id", key: "id" },
+		{ label: "registrationId", key: "registrationId" },
+		{ label: "name", key: "name" },
+		{ label: "attendaces", key: "attendaces" }
+	  ]
+	  const csvReport = {
+		data: dataForExport,
+		headers: headers,
+		filename: fileName
+	  };
+	return <CSVLink {...csvReport} separator=";" style={{textDecoration:"none"}}><Button variant="outlined">{buttonTitle}</Button></CSVLink>
+}

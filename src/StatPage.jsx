@@ -1,15 +1,22 @@
 /* import styled from "styled-components" */
 import  { useGetAll} from "./tools/datoCmsTools"
-import { CSVExportLink, getRegistrationsForExport } from "./CSVExportLink"
+import { CSVExportLink, getRegistrationsForExport, AttendancesCSVExportLink } from "./CSVExportLink"
 
 const StatPage = () => {
 	
 	const stages = useGetAll("stage")
 	const registrations = useGetAll("registration")
-	const onsite = registrations.filter(r => r.onsite)
+	console.log("registrations", registrations)
+	const attendances = useGetAll("attendance") ?? []
+	const attendancesWithRegistration = attendances.map((attendance) => {
+		const registration = registrations.find((registration) => registration.id === attendance.registration)
+		return {...attendance, registrationDetails: registration}
+	})
+	console.log("attendances", attendancesWithRegistration)
+		const onsite = registrations.filter(r => r.onsite)
 	const online = registrations.filter(r => (!(r.onsite)))
 	
-	const registrationsForExport = getRegistrationsForExport(registrations)
+	const registrationsForExport = getRegistrationsForExport(registrations) ?? []
 	
 	const numberOfRegistrationFeedback = registrationsForExport.filter((registration) => registration.registrationFeedback ).length
 	const numberOfTranslation = registrationsForExport.filter((registration) => (registration.translation)  ).length
@@ -35,6 +42,7 @@ const StatPage = () => {
 			<div>Ebből ennyi a lemondás: {numberOfCancellation}</div>
 			<div>Tolmácsolást kér: {numberOfTranslation}</div>
 			<CSVExportLink registrations={registrations} fileName="iok2023_jelentkezesek.csv" buttonTitle="Regisztráltak exportálása CSV fájlba" />
+			<AttendancesCSVExportLink attendances={attendancesWithRegistration} fileName="iok2023_latogatasi_adatok.csv" buttonTitle="Látogatási adatok exportálása CSV fájlba" />
 		</>
 	)
 }
